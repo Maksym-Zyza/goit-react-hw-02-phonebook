@@ -5,21 +5,45 @@ import Contacts from './components/Contacts';
 class App extends React.Component {
   state = {
     contacts: [],
-    name: 'sdsdfsfa'
+    name: ''
   }
 
+  handleInputCheng = event => {
+    const { name, value } = event.currentTarget;
+    this.setState({ [name]: value })
+  }
+
+  handleSubmit = event => {
+    event.preventDefault();
+
+    const { contacts, name } = this.state;
+    contacts.push(name)
+    this.setState({ name: '' })
+    // console.log(contacts);
+  }
+  
   render() {
-    const { name } = this.state;
+    const { contacts } = this.state;
 
     return (
       <div>
         <h1>Phonebook</h1>
-        <h2>Name</h2>
-        <input type="text" value={ this.state.name}/>
-        <button>Add contact</button>
+        <form onSubmit={this.handleSubmit}>
+          <label>
+            Name
+            <input
+              type="text"
+              name="name"
+              value={this.state.name}
+              onChange={this.handleInputCheng} />
+          </label>
+
+          <button type="submit">Add contact</button>
+        </form>
 
         <Contacts
-          name={name}
+          title="Contacts"
+          contacts={contacts}
         />
       </div>
       
