@@ -1,55 +1,73 @@
 import React from 'react';
-import Contacts from './components/Contacts';
-
+import Filter from './components/Filter/Filter';
+import ContactList from './components/ContactList/ContactList';
+import ContactForm from './components/ContactForm/ContactForm';
+import style from './App.module.css';
 
 class App extends React.Component {
   state = {
-    contacts: [],
-    name: ''
-  }
+    contacts: [
+      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
+      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
+      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
+      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
+    ],
+    filter: '',
+  };
 
-  handleInputCheng = event => {
-    const { name, value } = event.currentTarget;
-    this.setState({ [name]: value })
-  }
+  submitHandler = contactObj => {
+    if (this.state.contacts.some(({ name }) => name === contactObj.name)) {
+      return alert(`${contactObj.name} is already in contacts.`);
+    }
+    this.setState(prevState => {
+      return {
+        contacts: [...prevState.contacts, contactObj],
+      };
+    });
+  };
 
-  handleSubmit = event => {
-    event.preventDefault();
+  changeFilterHandler = filter => {
+    this.setState({ filter });
+  };
 
-    const { contacts, name } = this.state;
-    contacts.push(name)
-    this.setState({ name: '' })
-    // console.log(contacts);
-  }
-  
+  contactDeleteHandler = id => {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter(contact => contact.id !== id),
+    }));
+  };
+
+  contactListFilter = () => {
+    const { contacts, filter } = this.state;
+
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(filter.toLowerCase()),
+    );
+  };
+
   render() {
-    const { contacts } = this.state;
-
+    const { contacts, filter } = this.state;
+    const filteredContactList = this.contactListFilter();
     return (
-      <div>
-        <h1>Phonebook</h1>
-        <form onSubmit={this.handleSubmit}>
-          <label>
-            Name
-            <input
-              type="text"
-              name="name"
-              value={this.state.name}
-              onChange={this.handleInputCheng} />
-          </label>
+      <div className={style.wrapper}>
+        <h1 className={style.title}>Phonebook</h1>
+        <ContactForm onSubmit={this.submitHandler} />
 
-          <button type="submit">Add contact</button>
-        </form>
-
-        <Contacts
-          title="Contacts"
-          contacts={contacts}
-        />
+        <h2 className={style.subtitle}>Contacts</h2>
+        {contacts.length > 1 && (
+          <Filter
+            initialValue={filter}
+            onFilterChange={this.changeFilterHandler}
+          />
+        )}
+        {filteredContactList.length > 0 && (
+          <ContactList
+            contacts={filteredContactList}
+            onDelBtnClick={this.contactDeleteHandler}
+          />
+        )}
       </div>
-      
+    );
+  }
+}
 
-    )
-   }
- }
-
-export default App
+export default App;

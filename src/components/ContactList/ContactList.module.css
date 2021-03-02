@@ -1,0 +1,31 @@
+.listItem {
+  display: flex;
+  justify-content: space-between;
+
+  margin-bottom: 10px;
+}
+
+.name {
+  margin-right: 25px;
+  color: #424242;
+}
+
+.namber {
+  font-style: italic;
+  color: #424242;
+}
+
+.btn {
+  width: 70px;
+  margin-left: 20px;
+  padding: 3px;
+  color: beige;
+  background-color: #ed4134;
+  border-radius: 50px;
+  border: none;
+  outline: #ed4134;
+}
+
+.btn:hover {
+  transform: scale(1.08);
+}
